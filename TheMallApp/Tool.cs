@@ -7,14 +7,17 @@ public class Tool : IItem
     public string Type { get; set; }
     public int Price { get; set; }
 
-    public Tool(string name, string description, string type, int price)
+    public int Barcode { get; set; }
+
+
+
+    public Tool(string name, string description, string type, int price, int barcode)
     {
         Name = name;
         Description = description;
         Type = type;
         Price = price;
-        
+        Barcode = barcode;
     }
-
 
 }

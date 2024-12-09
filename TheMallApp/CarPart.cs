@@ -1,4 +1,6 @@
-﻿namespace TheMallApp;
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace TheMallApp;
 
 public class CarPart : IItem
 {
@@ -7,16 +9,18 @@ public class CarPart : IItem
     public string Type { get; set; }
     public int Price { get; set; }
 
-    public int Partnumber { get; set; }
+    public int Barcode { get; set; }
 
-    public CarPart(string name , string description, string type , int price , int partnumber )
-    {
+ 
+    public CarPart(string name , string description, string type , int price , int barcode )
+    {  
         Name = name;
         Description = description;
         Type = type;
         Price = price;
-        Partnumber = partnumber;
+        Barcode = barcode;
     }
+
 
 
 }
