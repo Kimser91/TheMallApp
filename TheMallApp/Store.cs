@@ -2,8 +2,13 @@
 
 public class Store
 {
+    
+    private string Choise;
+
     List<IItem> Items = new List<IItem>();
     List<IItem> ShoppingCart = new List<IItem>();
+    List<IItem> SearchResult = new List<IItem>();
+
     List<CarPart> CarParts = new List<CarPart>()
     {
         new CarPart("Engine", "Main power unit of the car", "Mechanical", 5000, 1001),
@@ -59,64 +64,78 @@ public class Store
     
     public void MainMenu()
     {
-        Console.WriteLine("Welcome to the Everything Store");
-        Console.WriteLine("what can i get you?");
-        Console.WriteLine("1. Just Browsing");
-        Console.WriteLine("2. Food");
-        Console.WriteLine("3. Tools");
-        Console.WriteLine("4. Carparts");
-        Console.WriteLine("5. Exit");
-        string input = Console.ReadLine();
+        bool active = true;
+        while(active){
 
-        switch (input)
-        {
-            case "1":
-                PrintAllItems();
-                break;
-            case "2":
-                PrintFood();
-                break;
-            case "3":
-                PrintTools();
-                break;
-            case "4":
-                PrintCarParts();
-                break;
-            case "5":
-                Environment.Exit(0);
-                break;
-            default:
-                MainMenu();
-                break;
+            Console.WriteLine("Welcome to the Everything Store");
+            Console.WriteLine("what do you want to do?");
+            Console.WriteLine("1. Look at overview");
+            Console.WriteLine("0. Exit");
+            string input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    PrintItemList();
+                    break;
+
+                case "0":
+                    Environment.Exit(0);
+                    break;
+
+            }
         }
     }
 
     public void buyItem()
     {
-        Console.WriteLine("add to cart by number");
-        int i = int.Parse(Console.ReadLine());
-        ShoppingCart.Add(Items[i]);
-        Console.WriteLine(ShoppingCart.Last().Name);
+        bool Shoping = true;
+        while (Shoping)
+        {
+            if (SearchResult.Count > 0)
+            {
+
+
+
+                Console.WriteLine("add to cart by number");
+                int i = int.Parse(Console.ReadLine());
+                ShoppingCart.Add(Items[i]);
+
+                Console.WriteLine(ShoppingCart.Last().Name);
+                Console.WriteLine("do you need anything else? Y/N");
+                string answer = Console.ReadLine();
+
+                if (answer == "N" || answer == "n")
+                {
+                    Shoping = false;
+                    PrintShoppingCart();
+                }
+
+                else
+                {
+
+                }
+            }
+            else
+            {
+                Shoping = false;
+            }
+        }
     }
 
-    public void PrintAllItems()
+    public void PrintItemList()
     {
-        
-        foreach (var carPart in CarParts)
-        {
-            Items.Add(carPart);
-        }
+        Console.WriteLine("What are you looking for?");
+        Console.WriteLine("1. all");
+        Console.WriteLine("2. Carparts");
+        Console.WriteLine("3. Tools");
+        Console.WriteLine("4. Food");
+        Console.WriteLine("5. Search for spesific item");
+        Choise = Console.ReadLine();
 
-        foreach (var tool in Tools)
-        {
-            Items.Add(tool);
-        }
-        foreach (var food in Foods) 
-        {
-            Items.Add(food);
-        }
+        MakeList(Choise);
 
-        for (int i = 0; i< Items.Count; i++)
+        for (int i = 0; i < Items.Count; i++)
         {
             Console.WriteLine(i + ": " + Items[i].Name);
         }
@@ -125,30 +144,89 @@ public class Store
 
     }
 
-    public void PrintCarParts()
+    public void MakeList(string userChoise)
     {
-        foreach (var carpart in CarParts)
+        Items.Clear();
+        if (userChoise == "1")
         {
-            Console.WriteLine(carpart.Name);
+            foreach (var carPart in CarParts) { Items.Add(carPart);}
+
+            foreach (var tool in Tools) { Items.Add(tool);}
+
+            foreach (var food in Foods) { Items.Add(food);}
+        }
+        
+        else if (userChoise == "2")
+        {
+            foreach (var carpart in CarParts) { Items.Add(carpart);}
+        }
+       
+        else if (userChoise == "3")
+        {
+            foreach (var tool in Tools) { Items.Add(tool);}
+        }
+        
+        else if (userChoise == "4")
+        {
+            foreach (var food in Foods) { Items.Add(food);}
+        }
+        
+        else
+        {
+            SearchForItem();
+            Items.Clear();
+
+            foreach (var item in SearchResult) { Items.Add(item);}
         }
     }
 
-    public void PrintFood()
+
+    public void SearchForItem()
     {
-        foreach (var food in Foods)
+        bool Searching = true;
+        while (Searching)
         {
-            Console.WriteLine(food.Name);
+            Choise = "1";
+            MakeList(Choise);
+            SearchResult.Clear();
+
+            Console.Write("Write SearchWord:");
+            string Searchword = Console.ReadLine();
+
+            foreach (var item in Items)
+            {
+                if (item.Name == Searchword || item.Type == Searchword)
+                {
+                    SearchResult.Add(item);
+                }
+            }
+
+            Console.WriteLine("Do you need anything else? Y/N");
+            string x = Console.ReadLine().ToUpper();
+
+            if (x == "N")
+            {
+                Searching = false;
+            }
+
         }
     }
 
-    public void PrintTools()
+    public void PrintShoppingCart()
     {
-        foreach (var tool in Tools)
-        {
-            Console.WriteLine(tool.Name);
-        }
-    }
+        int sum = 0;
+      
+        
+            
+            foreach (var Item in ShoppingCart)
+            {
+                Console.WriteLine($"Name: {Item.Name}.  Price: {Item.Price}");
+                sum += Item.Price;
+            }
+        
 
+        Console.WriteLine($"Your Total Is: {sum}$");
+    }
 
 
 }
